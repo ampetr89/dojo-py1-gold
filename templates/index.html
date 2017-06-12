@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>NinjaGold</title>
+	<!--<link rel="stylesheet" type="text/css" href="../static/css/style.css">-->
+	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		
+		$(document).ready(function(){
+			places = {'Farm': 'earns 10-20 golds', 'Cave': 'earns 5-10 golds',
+						'House': 'earns 2-5 golds', 'Casino': 'earns/takes 0-50 golds'}
+
+			for(var place in places){
+				$('#places').append('<div class="place" id="'+place+'"></div>');
+				$('#'+place).append('<h1>'+place+'</h1>');
+				$('#'+place).append('<span>('+places[place]+')</span>');
+				$('#'+place).append('<form action="/process_money" method="post"></input>');
+				$('#'+place+' form').append('<input type="hidden" name="place" value="'+place+'"></input>');
+				$('#'+place+' form').append('<input type="submit" value="Find Gold!"></input>');
+
+			}
+
+			function scroll(){
+				var scrollHeight = $('#activities').prop('scrollHeight');
+				$('#activities').prop('scrollTop', scrollHeight ); // scroll to bottom	
+				// https://stackoverflow.com/questions/7381817/how-do-i-determine-scrollheight
+			}
+
+			$.ajax({
+				url: '/get_activities',
+				async: false, // add all the activities first
+				success: function(res){
+					aa = res.activities;
+					for(var i in res.activities){
+						$('#activities ul').append('<li>'+aa[i]+'</li>');
+					}
+					scroll();
+				}
+			})
+			
+			$('#places form').submit(function(){
+				place = $(this).children().val();
+				$.ajax({
+					url: '/process_money', 
+					data: $(this).serialize(), 
+					type: 'POST',
+					success: function(res){ 
+						//console.log(res)
+						// check if list is empty, if not, just add the most recent
+						$('#activities ul').append('<li>'+res.lastmsg+'</li>');
+						scroll();
+						$('#score span').text(res.gold);
+					}
+					
+				})
+				return false;
+			})
+
+		})
+	</script>
+</head>
+<body>
+
+<main>
+	<section id="score">
+		Your gold: <span>{{gold}}</span>
+	</section>
+	<section id="places">
+		
+	</section>
+
+	<section id="activities">
+		<h2>Activities</h2>
+		<ul>
+			
+		</ul>
+
+	</section>
+
+	<section id="reset">
+		<form action='/reset'>
+			<input type='submit' value='Reset'>
+		</form>
+	</section>
+</main>
+</body>
+</html>

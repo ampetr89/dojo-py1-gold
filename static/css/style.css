@@ -1,0 +1,60 @@
+*{
+	padding:0;
+	margin: 0;
+
+}
+
+html{
+
+}
+
+section{
+	margin: 20px auto;
+	width: 95%;
+	text-align: center;
+}
+
+#score{
+	/*TODO: make this a cool font*/
+}
+
+#score span{
+	background-color: yellow;
+}
+#places{
+	min-height: 237px;
+	
+}
+.place{
+	display: inline-block;
+	vertical-align: top;
+	width: 175px;
+	height: 175px;
+	border: 1px black solid;
+	padding: 30px;
+	text-align: center;
+	margin-right: 10px
+}
+
+.place input[type="submit"]{
+	margin-top: 3em;
+	padding: 8px;
+}
+
+#activities{
+	height: 40vh;
+	width: 90%;
+	text-align: left;
+	border: 1px solid green;
+	padding-left: 20px;
+	overflow-y: scroll;
+}
+
+#activities ul{
+	list-style: none;
+}
+
+#reset input{
+	padding: 12px;
+	color: red;
+}
