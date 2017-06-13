@@ -12,12 +12,13 @@ def initialize():
 	session['activities'] = []
 
 def get_msg(gold, place, ts):
-	ts_fmt = ts.strftime('%Y/%m/%d %I:%M:%S %p')
+	ts_fmt = ts.strftime('%a. %m/%d %I:%M:%S %p')
 	if gold >= 0:
-		return 'Earned {} gold from the {}! ({})'.format(gold, place, ts_fmt)
+		msg = 'Earned {} gold from the {}!'.format(gold, place)
 	else:
-		return 'Entered the {} and lost {} gold.. Ouch.. ({})'.format(place, gold, ts_fmt)
+		msg = 'Entered the {} and lost {} gold'.format(place, gold)
 
+	return (ts_fmt, msg)
 
 @app.route('/')
 def index():
@@ -46,7 +47,7 @@ def process_money():
 
 	
 	msg = get_msg(addgold, place, ts)
-	session['activities'].append(msg)
+	session['activities'].append((addgold, msg))
 
 	newgold = session['gold'] + addgold # allow negative gold?
 	session['gold'] = newgold
@@ -54,7 +55,7 @@ def process_money():
 	return jsonify({
 		'activities': session['activities'],
 		'gold': session['gold'],
-		'lastmsg': msg
+		'last_activity': (addgold, msg)
 		})
 	
 	# return redirect('/')

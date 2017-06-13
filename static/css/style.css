@@ -5,56 +5,125 @@
 }
 
 html{
-
+	/*background-color: rgb(103,156,128);*/
+	background-color: rgb(69, 195, 243);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: right bottom; 
+    background-size: 18vw auto;
+	font-family: "Open Sans", Arial, sans-serif;
 }
 
+main{
+	text-align: center;
+	padding-top: 5vh;
+}
+/*
 section{
-	margin: 20px auto;
+	margin: 10px auto;
 	width: 95%;
+	text-align: center;
+}*/
+
+#places{
+	/*min-height: calc(10vh + 3em);*/
+	padding-top: 5vh;
+	display: inline-block;
+	vertical-align: top;
+	width: calc(2*20vw + 24px);
+}
+
+.place{
+	display: inline-block;
+	vertical-align: top;
+	width: 20vw;
+	
+	height: 20vw;
+	border: 0px rgba(0,0,0,0.2	) solid;
+	padding: 0px;
+	text-align: center;
+	margin-right: 10px;
+	margin-bottom: 5px;
+}
+
+.place span{
+	font-size: 80%
+}
+/*.place h1{
+	font-size: 80%;
+}*/
+.place img{
+	display: block;
+	margin: 0 auto;
+	width: 14vw;
+	height: 14vw;
+}
+.place input[type="submit"]{
+	margin-top: .5em;
+	padding: 8px;
+}
+
+.place span{
+	display: inline-block;
+	padding: 4px;
+	min-height: 1.2em;
+}
+
+#game-data{
+	display: inline-block;
+	vertical-align: top;
+	width: 35vw;
+	height: calc(2*20vw + 2px + 5px);
 	text-align: center;
 }
 
+#score, #activities{
+	margin: 0 auto;
+	width: 100%;
+
+}
 #score{
 	/*TODO: make this a cool font*/
+	font-weight: bold;
+	height: 15vh;
+	font-size: 150%;
+	font-size: Arial, sans-serif;
 }
 
 #score span{
 	background-color: yellow;
-}
-#places{
-	min-height: 237px;
-	
-}
-.place{
-	display: inline-block;
-	vertical-align: top;
-	width: 175px;
-	height: 175px;
-	border: 1px black solid;
-	padding: 30px;
-	text-align: center;
-	margin-right: 10px
-}
 
-.place input[type="submit"]{
-	margin-top: 3em;
-	padding: 8px;
 }
 
 #activities{
-	height: 40vh;
-	width: 90%;
+	
+	height: 50vh; /*calc(100% - 25vh);*/
 	text-align: left;
-	border: 1px solid green;
+	border: 1px #004d66 solid ;
+	background-color: #e6f9ff;/* rgb(200,200,200);*/
 	padding-left: 20px;
 	overflow-y: scroll;
 }
 
+.ts{
+	font-family: courier, times;
+	font-size: 70%;
+	color: rgb(72,72,72);
+}
+.msg{
+	font-size: 90%;
+}
+#activities h2{
+	margin: 5px;
+}
+
 #activities ul{
 	list-style: none;
+	padding: 5px;
 }
 
 #reset input{
+	margin-top: 2em;
 	padding: 12px;
-	color: red;
+	font-weight: bold;
 }

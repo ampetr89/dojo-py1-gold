@@ -2,8 +2,9 @@
 <html>
 <head>
 	<title>NinjaGold</title>
-	<!--<link rel="stylesheet" type="text/css" href="../static/css/style.css">-->
+	<link rel="icon" href="{{url_for('static', filename='img/ninja.jpg')}}">
 	<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/style.css')}}">
+	<!--<link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>-->
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type="text/javascript">
 		
@@ -11,33 +12,88 @@
 			places = {'Farm': 'earns 10-20 golds', 'Cave': 'earns 5-10 golds',
 						'House': 'earns 2-5 golds', 'Casino': 'earns/takes 0-50 golds'}
 
-			for(var place in places){
-				$('#places').append('<div class="place" id="'+place+'"></div>');
-				$('#'+place).append('<h1>'+place+'</h1>');
-				$('#'+place).append('<span>('+places[place]+')</span>');
-				$('#'+place).append('<form action="/process_money" method="post"></input>');
-				$('#'+place+' form').append('<input type="hidden" name="place" value="'+place+'"></input>');
-				$('#'+place+' form').append('<input type="submit" value="Find Gold!"></input>');
+			ninjaImg = '{{url_for("static", filename="img/ninjas.jpg")}}';
+			//ninjaImg = '../static/img/ninja.jpg';
+			//$('html').css('background-image', 'url("'+ninjaImg+'")');
 
+			// have jinga generate the path and then 
+			IMG = '{{url_for("static", filename="img/IMG.jpg")}}';
+			for(var place in places){
+				// imgsrc = '"../static/img/'+place.toLowerCase()+'.jpg"';
+				pl= place.toLowerCase();
+				imgsrc = IMG.replace('IMG',pl);
+				//console.log(imgsrc);
+				$('#places').append('<div class="place" id="'+place+'"></div>');
+				$('#'+place).append('<img src='+imgsrc+'>');
+				//$('#'+place).append('<h1>'+place+'</h1>');
+				
+				$('#'+place).append('<form action="/process_money" method="post"></input>');
+				
+				
+				$('#'+place+' form').append('<input type="hidden" name="place" value="'+place+'"></input>');
+				$('#'+place+' form').append('<input type="submit" value="Enter '+place+'"></input>');
+				$('#'+place).append('<span>('+places[place]+')</span>');
 			}
 
 			function scroll(){
 				var scrollHeight = $('#activities').prop('scrollHeight');
-				$('#activities').prop('scrollTop', scrollHeight ); // scroll to bottom	
+				$('#activities').prop('scrollTop', scrollHeight ); 
+				// scroll to bottom	
 				// https://stackoverflow.com/questions/7381817/how-do-i-determine-scrollheight
 			}
 
+			/*$('.place img').hover(
+				function(){
+					$(this).fadeTo(200, .6);
+				},
+				function(){
+					$(this).fadeTo(300, 1);
+				}
+			)*/
+			
+			$('.place input').hover(
+				function(){
+					$(this).css('text-decoration', 'underline');
+					$(this).parent().parent().children('img').fadeTo(200, .6);
+				},
+				function(){
+					$(this).css('text-decoration', 'none');
+					$(this).parent().parent().children('img').fadeTo(300, 1);
+				}
+			)
+
+
+			function get_color(addgold){
+				if (addgold < 0){
+					return 'crimson';
+				}else{
+					return 'green';
+				}
+			}
+
+			function list_entry(activity){
+				addgold = activity[0];
+				entry = activity[1];
+				ts = entry[0];
+				msg = entry[1];
+				color = get_color(addgold);
+				li = '<li><span class="ts">'+ts+':</span> <span class="msg" style="color: '+color+'">'+msg+'</span></li>'
+				return li
+			}
 			$.ajax({
 				url: '/get_activities',
 				async: false, // add all the activities first
 				success: function(res){
 					aa = res.activities;
+					console.log(aa);
 					for(var i in res.activities){
-						$('#activities ul').append('<li>'+aa[i]+'</li>');
+						li = list_entry(res.activities[i]);
+						$('#activities ul').append(li);
 					}
 					scroll();
 				}
 			})
+			
 			
 			$('#places form').submit(function(){
 				place = $(this).children().val();
@@ -48,7 +104,9 @@
 					success: function(res){ 
 						//console.log(res)
 						// check if list is empty, if not, just add the most recent
-						$('#activities ul').append('<li>'+res.lastmsg+'</li>');
+						last = res.last_activity;
+						li = list_entry(last);
+						$('#activities ul').append(li);
 						scroll();
 						$('#score span').text(res.gold);
 					}
@@ -63,24 +121,26 @@
 <body>
 
 <main>
-	<section id="score">
-		Your gold: <span>{{gold}}</span>
-	</section>
 	<section id="places">
 		
 	</section>
 
-	<section id="activities">
-		<h2>Activities</h2>
-		<ul>
+	<section id="game-data">
+		<section id="score">
+			Your gold: <span>{{gold}}</span>
 			
-		</ul>
+		</section>
 
-	</section>
+		<section id="activities">
+			<h2>Log</h2>
+			<ul>
+				
+			</ul>
 
-	<section id="reset">
-		<form action='/reset'>
-			<input type='submit' value='Reset'>
+		</section>
+
+		<form action='/reset' id="reset">
+				<input type='submit' value='Reset' >
 		</form>
 	</section>
 </main>
